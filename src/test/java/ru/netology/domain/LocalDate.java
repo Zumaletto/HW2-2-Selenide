@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDate{
 
-    static String inputData(int days){
+    static String dataInput(int days){
         String inputData = java.time.LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.mm.yyyy"));
     return inputData;
     }
