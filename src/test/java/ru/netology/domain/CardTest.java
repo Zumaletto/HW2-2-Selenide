@@ -1,11 +1,11 @@
 package ru.netology.domain;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
+import java.lang.module.ModuleFinder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CardTest {
 
@@ -25,7 +24,6 @@ public class CardTest {
     @BeforeEach
     void setupClass() {
         open("http://localhost:9999/");
-        $("[action]");
     }
 
     @Test
@@ -49,7 +47,7 @@ public class CardTest {
     @Test
     void shouldSelectFromListCity() {
 
-        String date = meetingDay(3);
+        String date = meetingDay(7);
         $("[data-test-id=city] .input__control").sendKeys("Са");
         $(withText("Санкт-Петербург")).click();
         $("[data-test-id=date] .input__control").doubleClick().sendKeys(Keys.DELETE);
@@ -190,6 +188,27 @@ public class CardTest {
         $("[data-test-id=city] .input__control").sendKeys("Санкт-Петербург");
         $("[data-test-id=date] .input__control").doubleClick().sendKeys(Keys.DELETE);
         $("[data-test-id=date] .input__control").sendKeys(date);
+        $("[data-test-id=name] .input__control").sendKeys("Петров Петр");
+        $("[data-test-id=phone] .input__control").sendKeys("+79999999999");
+        $("[class=button__text]").click();
+        $("[data-test-id=agreement].input_invalid .checkbox__text")
+                .shouldHave(Condition.exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
+    }
+
+    @Test
+    void shouldSelectDate() {
+
+        $("[data-test-id=city] .input__control").sendKeys("Санкт-Петербург");
+        $("[data-test-id=date] .input__control").doubleClick().sendKeys(Keys.DELETE);
+        $("[class=icon-button__content]").click();
+        LocalDate todayDay = LocalDate.now();
+        LocalDate meetingDate = LocalDate.now().plusDays(35);
+
+        if (todayDay.getMonthValue() != meetingDate.getMonthValue()) {
+            $(".calendar__arrow_direction_right[data-step='1']").click();
+        }
+        $$("td.calendar__day").find(Condition.text(String.valueOf(meetingDate.getDayOfMonth()))).click();
+
         $("[data-test-id=name] .input__control").sendKeys("Петров Петр");
         $("[data-test-id=phone] .input__control").sendKeys("+79999999999");
         $("[class=button__text]").click();
