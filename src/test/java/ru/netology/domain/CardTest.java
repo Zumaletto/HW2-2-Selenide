@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import java.lang.module.ModuleFinder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,8 +39,6 @@ public class CardTest {
         $("[data-test-id=notification]").shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id=notification]  .notification__title")
                 .shouldHave(exactText("Успешно!"));
-        $("[data-test-id=notification]  .notification__content")
-                .shouldHave(exactText("Встреча успешно забронирована на " + date));
     }
 
     @Test
@@ -59,8 +56,6 @@ public class CardTest {
         $("[data-test-id=notification]").shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id=notification]  .notification__title")
                 .shouldHave(exactText("Успешно!"));
-        $("[data-test-id=notification]  .notification__content")
-                .shouldHave(exactText("Встреча успешно забронирована на " + date));
     }
 
     @Test
@@ -211,9 +206,10 @@ public class CardTest {
 
         $("[data-test-id=name] .input__control").sendKeys("Петров Петр");
         $("[data-test-id=phone] .input__control").sendKeys("+79999999999");
+        $("[data-test-id=agreement] .checkbox__box").click();
         $("[class=button__text]").click();
-        $("[data-test-id=agreement].input_invalid .checkbox__text")
-                .shouldHave(Condition.exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
+        $("[data-test-id=notification]").shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id=notification]  .notification__title")
+                .shouldHave(exactText("Успешно!"));
     }
-
 }
